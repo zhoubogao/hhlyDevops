@@ -8,6 +8,7 @@ from wtforms import StringField
 class LoginForm(Form):
     login = fields.StringField(u'用户名', validators=[validators.required()])
     password = fields.PasswordField(u'密码', validators=[validators.required()])
+    submit = fields.SubmitField(u'登陆', validators=[validators.required()])
 
     def validate_login(self, field):
         user = self.get_user()
@@ -23,3 +24,13 @@ class LoginForm(Form):
 
     def get_user(self):
         return db.session.query(User).filter_by(login=self.login.data).first()
+
+
+class TForm(Form):
+    protocol = fields.SelectField(choices=[('aim', 'AIM'), ('msn', 'MSN')])
+    username = fields.TextField()
+
+class ContactForm(Form):
+    first_name  = fields.TextField()
+    last_name   = fields.TextField()
+    im_accounts = fields.FieldList(fields.FormField(TForm), min_entries = 1)

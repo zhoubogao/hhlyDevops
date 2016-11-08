@@ -4,7 +4,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin import AdminIndexView, helpers, expose
 from werkzeug.security import generate_password_hash
 from flask_login import current_user, login_user, logout_user
-from models import User, Role, Device, Platforms_info, Ip
+from models import User, Role, Device, Platforms_info, Ip, Project, App
 from forms import LoginForm
 from flask_principal import (
                              ActionNeed,
@@ -33,10 +33,12 @@ admin_denied = Denial(RoleNeed('Admin'))
 
 # Create customized model view class
 class UserModelView(ModelView):
+    can_export = True
     can_view_details = True
     column_exclude_list = ['password', ]
-    column_list = ('real_name', 'email', 'login', 'roles')
-    column_searchable_list = ( User.real_name, User.login)
+    column_searchable_list = ( 'real_name', 'login', Role.name)
+    column_display_all_relations = True
+
 
 
     def is_accessible(self):
@@ -46,12 +48,64 @@ class UserModelView(ModelView):
         User.password = generate_password_hash(form.password.data)
 
 # Create customized model view class
+class RoleModelView(ModelView):
+    can_export = True
+    can_view_details = True
+    column_editable_list = ('description',)
+    column_searchable_list = ( 'name', User.login)
+    column_display_all_relations = True
+
+
+
+# Create customized model view class
+class Platforms_infoModelView(ModelView):
+    can_export = True
+    can_view_details = True
+    column_editable_list = ('description','url', 'username', 'password', 'ps',)
+    column_searchable_list = ( 'platform', 'url')
+    column_display_all_relations = True
+
+
+
+# Create customized model view class
 class DeviceModelView(ModelView):
+    can_export = True
+    can_view_details = True
+    column_editable_list = ('device_num','idc', 'location', 
+                            'hardware_type', 'brand', 'buy_date',
+                            'brand','fast_repair_code', 'cpu', 
+                            'memory', 'disk',)
     column_searchable_list = ( 'device_name', Ip.ip)
-    column_list = ('device_name', Ip.ip, 'idc', 'location', 
-                   'hardware_type', 'brand', 'buy_date', 
-                   'fast_repair_code', 'cpu', 'mem',
-                   'disk',)
+    column_display_all_relations = True
+
+
+
+# Create customized model view class
+class IpModelView(ModelView):
+    can_export = True
+    can_view_details = True
+    column_editable_list = ('isp','use', 'mask', 'mac',
+                            'route', 'switch_port', 
+                            )
+    column_searchable_list = ( 'ip', )
+    column_display_all_relations = True
+
+
+# Create customized model view class
+class ProjectModelView(ModelView):
+    can_export = True
+    can_view_details = True
+#    column_editable_list = ()
+    column_searchable_list = ( 'name', App.app)
+    column_display_all_relations = True
+
+# Create customized model view class
+class AppModelView(ModelView):
+    can_export = True
+    can_view_details = True
+    column_editable_list = ('description','domain', 'port', 'ps',)
+    column_searchable_list = ( 'app', )
+    column_display_all_relations = True
 
 
 
@@ -64,7 +118,7 @@ class OpsAdminIndexView(AdminIndexView):
     def index_view(self):
         if not current_user.is_authenticated:
             return redirect(url_for('auth.login'))
-        with admin_permission.require(http_exception=403):
+#        with admin_permission.require(http_exception=403):
 
-            return super(OpsAdminIndexView, self).index_view()
+        return super(OpsAdminIndexView, self).index_view()
 

@@ -250,10 +250,11 @@ input.search{
 /* Sidebar */
 #sidebar-nav {
 	position: absolute;
-	width: 180px;
+	width: 20%;
 	float: left;
 	margin: 0em;
-	padding-top: 5.8em;	
+	padding-top: 0em;	
+	background: #e5e5e5;
 }
 #dashboard-menu {
 	list-style: none;

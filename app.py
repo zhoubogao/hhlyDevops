@@ -37,6 +37,8 @@ db.init_app(app)
 
 # url redirect
 auth = Blueprint('auth', __name__)
+asset = Blueprint('asset', __name__)
+
 
 # Initialize flask-login
 login_manager = LoginManager(app)
@@ -70,6 +72,7 @@ def set_identity():
             g.identity = AnonymousIdentity()
 
 # Flask views
+
 @app.route('/')
 #@login_required
 def index():
@@ -97,21 +100,40 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login')) 
 
+@asset.route('/platforminfo', methods=['GET', 'POST'])
+def platforminfo():
+
+    return render_template('platforminfo.html')#, form=form)
+
+@asset.route('/deviceinfo', methods=['GET', 'POST'])
+def deviceinfo():
+
+    return render_template('deviceinfo.html')#, form=form)
+    
+@asset.route('/appinfo', methods=['GET', 'POST'])
+def appinfo():
+
+    return render_template('appinfo.html')#, form=form)
+
+
 # Ceate admin
 admin = Admin(app, 
               'HHLY-DEVOPS: Admin', 
               index_view=views.OpsAdminIndexView(), 
-              base_template='my_master.html'
+              base_template='admin_home.html'
               )
 
 # Add view
 admin.add_view(views.UserModelView(models.User, db.session))
-admin.add_view(ModelView(models.Role, db.session))
-admin.add_view(ModelView(models.Platforms_info, db.session))
+admin.add_view(views.RoleModelView(models.Role, db.session))
+admin.add_view(views.Platforms_infoModelView(models.Platforms_info, db.session))
 admin.add_view(views.DeviceModelView(models.Device, db.session))
-admin.add_view(ModelView(models.Ip, db.session))
+admin.add_view(views.IpModelView(models.Ip, db.session))
+admin.add_view(views.ProjectModelView(models.Project, db.session))
+admin.add_view(views.AppModelView(models.App, db.session))
 
 
 app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(asset, url_prefix='/asset')
 
 

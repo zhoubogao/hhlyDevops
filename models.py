@@ -1,5 +1,6 @@
 #-*-coding:utf-8-*-
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.associationproxy import association_proxy
 from flask_login import UserMixin
 # Create user model.
 db = SQLAlchemy()
@@ -29,11 +30,13 @@ class User(db.Model, UserMixin):
     login = db.Column(db.Unicode(length=254), unique=True, nullable=False)
     password = db.Column(db.Unicode(length=255), nullable=False)
 
+
     roles = db.relationship(
         'Role',
         secondary=users_roles,
-        backref=db.backref('users', lazy='dynamic'),
+        backref=db.backref('users',),
     )
+
 
     # Required for administrative interface
     def __unicode__(self):
@@ -55,23 +58,33 @@ class Platforms_info(db.Model):
         return self.platform
 
 
-
+devices_apps = db.Table(
+    'devices_apps',
+    db.Column('device_id', db.Integer, db.ForeignKey('device.id')),
+    db.Column('app_id', db.Integer, db.ForeignKey('app.id'))
+)
 
 class Device(db.Model):
     """docstring for Device_info"""
     id = db.Column(db.Integer, primary_key=True)
+    device_num = db.Column(db.Unicode(length=254), )
     device_name = db.Column(db.Unicode(length=254), unique=True, nullable=False)
-    ips = db.relationship('Ip', backref='device', lazy='dynamic')
     idc = db.Column(db.Unicode(length=254), nullable=False)
-    location = db.Column(db.Unicode(length=254), nullable=False)
+    location = db.Column(db.Unicode(length=254), )
     hardware_type = db.Column(db.Unicode(length=254), )
     brand = db.Column(db.Unicode(length=254), )
-    buy_date = db.Column(db.Unicode(length=254), )
+    buy_date = db.Column(db.DateTime, )
     fast_repair_code = db.Column(db.Unicode(length=254), )
     cpu = db.Column(db.Unicode(length=254), )
-    member = db.Column(db.Unicode(length=254), )
+    memory = db.Column(db.Unicode(length=254), )
     disk = db.Column(db.Unicode(length=254), )
-
+    ips = db.relationship('Ip', 
+                          backref='device', 
+                          )
+    apps = db.relationship('App',
+                               secondary=devices_apps,
+                               backref=db.backref('device',),
+                               )
 
     # Required for administrative interface
     def __unicode__(self):
@@ -91,7 +104,32 @@ class Ip(db.Model):
 
     # Required for administrative interface
     def __unicode__(self):
-        return self.isp+ u' ' +self.ip
-		
+        return self.isp+ u' ' + self.ip
 
 
+class Project(db.Model):
+    """docstring for app"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
+    apps = db.relationship('App', 
+                          backref='project_name', 
+                           )
+
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.name
+
+
+class App(db.Model):
+    """docstring for app"""
+    id = db.Column(db.Integer, primary_key=True)
+    project = db.Column(db.Integer, db.ForeignKey('project.id'))
+    app = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
+    description = db.Column(db.Unicode(length=254), )
+    domain = db.Column(db.Unicode(length=254), )
+    port = db.Column(db.Unicode(length=254), )	
+    ps = db.Column(db.Unicode(length=254), )
+
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.app

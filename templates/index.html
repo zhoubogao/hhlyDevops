@@ -72,50 +72,16 @@
             <li>
                 <a class="dropdown-toggle" href="#">
                     <i class="icon-group"></i>
-                    <span>权限管理</span>
+                    <span>资产</span>
                     <i class="icon-chevron-down"></i>
                 </a>
                 <ul class="submenu">
-                    <!--<li><a href="user-list.html">权限管理</a></li>-->
-                    <li><a href="new-user.html">修改系统密码</a></li>
-                    <li><a href="user-profile.html">xgo权限分配</a></li>
-                </ul>
-            </li>
-            <!--
-            <li>
-                <a class="dropdown-toggle" href="#">
-                    <i class="icon-edit"></i>
-                    <span>Forms</span>
-                    <i class="icon-chevron-down"></i>
-                </a>
-                <ul class="submenu">
-                    <li><a href="form-showcase.html">Form showcase</a></li>
-                    <li><a href="form-wizard.html">Form wizard</a></li>
+                    <li><a href="{{ url_for('asset.platforminfo') }}">平台资源信息</a></li>
+                    <li><a href="{{ url_for('asset.deviceinfo') }}">设备信息</a></li>
+                    <li><a href="{{ url_for('asset.appinfo') }}">应用信息</a></li>
                 </ul>
             </li>
 
-            <li>
-                <a href="gallery.html">
-                    <i class="icon-picture"></i>
-                    <span>Gallery</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="calendar.html">
-                    <i class="icon-calendar-empty"></i>
-                    <span>Calendar</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="tables.html">
-                    <i class="icon-th-large"></i>
-                    <span>Tables</span>
-                </a>
-
-            <li>
-            -->
             <li>
                 <a class="dropdown-toggle" href="#">
                     <i class="icon-th-large""></i>
@@ -201,7 +167,14 @@
 
     <!-- end sidebar -->
 
-	<!-- main container -->
+    <!-- main container -->
+    <div class="content">
+       
+     {% block main_container %}
+     {% endblock %}
+     
+    </div>
+    <!-- end main container -->
 
 	<!-- scripts -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -328,6 +301,6 @@
             });
         });
     </script>
-<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='utf-8'></script></div>
 </body>
 </html>
