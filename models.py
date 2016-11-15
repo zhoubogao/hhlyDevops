@@ -17,7 +17,6 @@ class Role(db.Model):  # 权限表
     name = db.Column(db.Unicode(length=254), unique=True, nullable=False)
     description = db.Column(db.Unicode(length=254), )
 
-
     # Required for administrative interface
     def __unicode__(self):
         return self.name
@@ -29,21 +28,18 @@ class User(db.Model, UserMixin):
     email = db.Column(db.Unicode(length=254), nullable=False)
     login = db.Column(db.Unicode(length=254), unique=True, nullable=False)
     password = db.Column(db.Unicode(length=255), nullable=False)
-
-
     roles = db.relationship(
         'Role',
         secondary=users_roles,
         backref=db.backref('users',),
     )
 
-
     # Required for administrative interface
     def __unicode__(self):
         return self.login
 
 class Platforms_info(db.Model):
-    """docstring for PlatformsInfo"""
+    """docstring for Platforms_info"""
     id = db.Column(db.Integer, primary_key=True)
     platform = db.Column(db.Unicode(length=254), unique=True, nullable=False)
     description = db.Column(db.Unicode(length=254), )
@@ -52,11 +48,9 @@ class Platforms_info(db.Model):
     password = db.Column(db.Unicode(length=254), )
     ps = db.Column(db.Unicode(length=254), )
 
-
     # Required for administrative interface
     def __unicode__(self):
         return self.platform
-
 
 devices_apps = db.Table(
     'devices_apps',
@@ -65,19 +59,11 @@ devices_apps = db.Table(
 )
 
 class Device(db.Model):
-    """docstring for Device_info"""
+    """docstring for Device"""
     id = db.Column(db.Integer, primary_key=True)
     device_num = db.Column(db.Unicode(length=254), )
     device_name = db.Column(db.Unicode(length=254), unique=True, nullable=False)
     idc = db.Column(db.Unicode(length=254), nullable=False)
-    location = db.Column(db.Unicode(length=254), )
-    hardware_type = db.Column(db.Unicode(length=254), )
-    brand = db.Column(db.Unicode(length=254), )
-    buy_date = db.Column(db.DateTime, )
-    fast_repair_code = db.Column(db.Unicode(length=254), )
-    cpu = db.Column(db.Unicode(length=254), )
-    memory = db.Column(db.Unicode(length=254), )
-    disk = db.Column(db.Unicode(length=254), )
     ips = db.relationship('Ip', 
                           backref='device', 
                           )
@@ -85,13 +71,22 @@ class Device(db.Model):
                                secondary=devices_apps,
                                backref=db.backref('device',),
                                )
+    location = db.Column(db.Unicode(length=254), )
+    used_to = db.Column(db.Unicode(length=254), )
+    hardware_type = db.Column(db.Unicode(length=254), )
+    brand = db.Column(db.Unicode(length=254), )
+    buy_date = db.Column(db.DateTime, )
+    fast_repair_code = db.Column(db.Unicode(length=254), )
+    cpu = db.Column(db.Unicode(length=254), )
+    memory = db.Column(db.Unicode(length=254), )
+    disk = db.Column(db.Unicode(length=254), )
 
     # Required for administrative interface
     def __unicode__(self):
         return self.device_name
 
 class Ip(db.Model):
-    """docstring for Ip_info"""
+    """docstring for Ip"""
     id = db.Column(db.Integer, primary_key=True)
     isp = db.Column(db.Unicode(length=254), )
     use = db.Column(db.Unicode(length=254), nullable=False)
@@ -101,33 +96,57 @@ class Ip(db.Model):
     route = db.Column(db.Unicode(length=254), )
     switch_port = db.Column(db.Unicode(length=254), )
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'))
+    username = db.Column(db.Unicode(length=254), )
+    password = db.Column(db.Unicode(length=255), )
 
     # Required for administrative interface
     def __unicode__(self):
-        return self.isp+ u' ' + self.ip
-
+        return self.isp+ u':' + self.ip
 
 class Project(db.Model):
-    """docstring for app"""
+    """docstring for Project"""
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
+    project = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
     apps = db.relationship('App', 
                           backref='project_name', 
                            )
 
     # Required for administrative interface
     def __unicode__(self):
-        return self.name
+        return self.project
 
+class Domain(db.Model):
+    """docstring for Domain"""
+    id = db.Column(db.Integer, primary_key=True)
+    domain = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
+    app = db.Column(db.Integer, db.ForeignKey('app.id'))
+
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.domain
+
+class Port(db.Model):
+    """docstring for Port"""
+    id = db.Column(db.Integer, primary_key=True)
+    port = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
+    app = db.Column(db.Integer, db.ForeignKey('app.id'))
+
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.port
 
 class App(db.Model):
-    """docstring for app"""
+    """docstring for App"""
     id = db.Column(db.Integer, primary_key=True)
     project = db.Column(db.Integer, db.ForeignKey('project.id'))
     app = db.Column(db.Unicode(length=254),  unique=True, nullable=False)
     description = db.Column(db.Unicode(length=254), )
-    domain = db.Column(db.Unicode(length=254), )
-    port = db.Column(db.Unicode(length=254), )	
+    domains = db.relationship('Domain', 
+                          backref='app_name', 
+                           )
+    ports = db.relationship('Port', 
+                          backref='app_name', 
+                           )
     ps = db.Column(db.Unicode(length=254), )
 
     # Required for administrative interface

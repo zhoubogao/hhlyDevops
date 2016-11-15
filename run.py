@@ -68,36 +68,28 @@ def build_first_db():
 
     app1 = App(app = u'kf_scsa', 
              description=u"客服我也不知道", 
-             domain=(u"kf.13322.com"),
-             port=(u"8031-8032"),
              ps=(u"没什么事"),
              )
 
     app2 = App(app = u'gamemanager', 
              description=u"游戏我也不知道", 
-             domain=(u"game.13322.com"),
-             port=(u"8031-8032"),
              ps=(u"没什么事"),
              )
 
     app3 = App(app = u'webPlatform', 
              description=u"公共我也不知道", 
-             domain=(u"p.13322.com"),
-             port=(u"8031-8032"),
              ps=(u"没什么事"),
              )
 
     app4 = App(app = u'wechat-server2', 
              description=u"wx我也不知道", 
-             domain=(u"wx.13322.com"),
-             port=(u"8031-8032"),
              ps=(u"没什么事"),
              )
 
-    project1 = Project(name = u'体彩项目', apps = [app1])
-    project2 = Project(name = u'福彩项目', apps = [app2])
-    project3 = Project(name = u'公共平台项目', apps = [app3])
-    project4 = Project(name = u'客服系统项目', apps = [app4])
+    project1 = Project(project = u'体彩项目', apps = [app1])
+    project2 = Project(project = u'福彩项目', apps = [app2])
+    project3 = Project(project = u'公共平台项目', apps = [app3])
+    project4 = Project(project = u'客服系统项目', apps = [app4])
 
 
 

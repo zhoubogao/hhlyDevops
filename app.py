@@ -130,6 +130,8 @@ admin.add_view(views.Platforms_infoModelView(models.Platforms_info, db.session))
 admin.add_view(views.DeviceModelView(models.Device, db.session))
 admin.add_view(views.IpModelView(models.Ip, db.session))
 admin.add_view(views.ProjectModelView(models.Project, db.session))
+admin.add_view(views.DomainModelView(models.Domain, db.session))
+admin.add_view(views.PortModelView(models.Port, db.session))
 admin.add_view(views.AppModelView(models.App, db.session))
 
 
