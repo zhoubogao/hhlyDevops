@@ -1,0 +1,10 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}hhlyDevops{% endblock %}
+
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block head %}
+	{{super()}}
+	{{fixes.ie8()}}
+{% endblock %}
